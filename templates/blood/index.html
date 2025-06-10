@@ -1,0 +1,481 @@
+{% load static %}
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>LifeSaver - Blood Donation Portal</title>
+    
+    <!-- Bootstrap CSS -->
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
+    
+    <!-- Font Awesome -->
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    
+    <style>
+        .hero-section {
+            margin-bottom: 0px;
+            background-image: url('{% static "image/homepage.jpg" %}');
+            background-size: cover;
+            background-repeat: no-repeat;
+            background-position: center;
+            min-height: 100vh;
+            position: relative;
+        }
+        
+        .hero-overlay {
+            background-color: rgba(0, 0, 0, 0.5);
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+        }
+        
+        .hero-content {
+            position: relative;
+            z-index: 1;
+            color: white;
+        }
+        
+        .cta-button {
+            padding: 12px 30px;
+            font-size: 1.2rem;
+            border-radius: 30px;
+            margin: 10px;
+            transition: all 0.3s ease;
+        }
+        
+        /* Enhanced Emergency Button with Blinking Effect and Text */
+        .emergency-btn {
+            position: fixed;
+            bottom: 30px;
+            right: 30px;
+            z-index: 1000;
+            border-radius: 50px;
+            width: auto;
+            height: 80px;
+            font-size: 1.2rem;
+            box-shadow: 0 5px 25px rgba(255, 0, 0, 0.6);
+            animation: pulse 1.5s infinite;
+            border: 3px solid white;
+            padding: 0 25px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            text-transform: uppercase;
+            font-weight: bold;
+        }
+        
+        .emergency-btn i {
+            margin-right: 10px;
+            font-size: 1.5rem;
+        }
+        
+        @keyframes pulse {
+            0% {
+                transform: scale(1);
+                box-shadow: 0 0 0 0 rgba(255, 0, 0, 0.7);
+            }
+            70% {
+                transform: scale(1.05);
+                box-shadow: 0 0 0 15px rgba(255, 0, 0, 0);
+            }
+            100% {
+                transform: scale(1);
+                box-shadow: 0 0 0 0 rgba(255, 0, 0, 0);
+            }
+        }
+        
+        /* Enhanced Feedback Button */
+        .feedback-btn {
+            position: fixed;
+            bottom: 130px;
+            right: 30px;
+            z-index: 1000;
+            border-radius: 50px;
+            width: auto;
+            height: 60px;
+            font-size: 1rem;
+            box-shadow: 0 5px 15px rgba(0, 0, 0, 0.2);
+            padding: 0 20px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            transition: all 0.3s ease;
+        }
+        
+        .feedback-btn i {
+            margin-right: 8px;
+        }
+        
+        .feedback-btn:hover {
+            transform: translateY(-3px);
+            box-shadow: 0 8px 20px rgba(0, 0, 0, 0.3);
+        }
+        
+        /* New First Aid Tips Button */
+        .firstaid-btn {
+            position: fixed;
+            bottom: 200px;
+            right: 30px;
+            z-index: 1000;
+            border-radius: 50px;
+            width: auto;
+            height: 60px;
+            font-size: 1rem;
+            box-shadow: 0 5px 15px rgba(0, 0, 0, 0.2);
+            padding: 0 20px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            background-color: #28a745;
+            border-color: #28a745;
+            transition: all 0.3s ease;
+        }
+        
+        .firstaid-btn i {
+            margin-right: 8px;
+        }
+        
+        .firstaid-btn:hover {
+            transform: translateY(-3px);
+            box-shadow: 0 8px 20px rgba(40, 167, 69, 0.3);
+            background-color: #218838;
+            border-color: #1e7e34;
+        }
+        
+        .quote-section {
+            background-color: #f8f9fa;
+            padding: 40px 0;
+        }
+        
+        .stats-section {
+            padding: 60px 0;
+            background-color: #dc3545;
+            color: white;
+        }
+        
+        .stat-item {
+            text-align: center;
+            padding: 20px;
+        }
+        
+        .stat-number {
+            font-size: 2.5rem;
+            font-weight: bold;
+        }
+        
+        /* First Aid Tips Modal Content */
+        .firstaid-tips img {
+            max-width: 100%;
+            height: auto;
+            border-radius: 8px;
+            margin-bottom: 15px;
+        }
+        
+        .firstaid-step {
+            margin-bottom: 20px;
+            padding-bottom: 20px;
+            border-bottom: 1px solid #eee;
+        }
+        
+        .firstaid-step h5 {
+            color: #dc3545;
+        }
+    </style>
+</head>
+
+<body>
+    {% include "blood/navbar.html" %}
+    
+    <!-- Emergency Button - Now with Text -->
+    <button class="btn btn-danger emergency-btn" data-bs-toggle="modal" data-bs-target="#emergencyModal">
+        <i class="fas fa-ambulance"></i> EMERGENCY
+    </button>
+    
+    <!-- First Aid Tips Button -->
+    <button class="btn firstaid-btn text-white" data-bs-toggle="modal" data-bs-target="#firstaidModal">
+        <i class="fas fa-first-aid"></i> FIRST AID TIPS
+    </button>
+    
+    <!-- Enhanced Feedback Button -->
+    <button class="btn btn-primary feedback-btn" data-bs-toggle="modal" data-bs-target="#feedbackModal">
+        <i class="fas fa-comment-alt"></i> FEEDBACK
+    </button>
+    
+    <!-- Hero Section -->
+    <section class="hero-section d-flex justify-content-center align-items-center">
+        <div class="hero-overlay"></div>
+        <div class="container text-center hero-content">
+            <h1 class="display-3 fw-bold mb-4">Save Lives With Your Blood</h1>
+            <p class="lead mb-5">Every blood donation is a lifesaver. Join our community of heroes today.</p>
+            <div class="d-flex justify-content-center flex-wrap">
+                <a href="{% url 'donate-blood' %}" class="btn btn-danger cta-button">
+                    <i class="fas fa-tint me-2"></i>Become a Donor
+                </a>
+                <a href="{% url 'make-request' %}" class="btn btn-outline-light cta-button">
+                    <i class="fas fa-user-injured me-2"></i>Need Blood?
+                </a>
+            </div>
+        </div>
+    </section>
+    
+    <!-- Stats Section -->
+    <section class="stats-section">
+        <div class="container">
+            <div class="row">
+                <div class="col-md-3 col-6 stat-item">
+                    <div class="stat-number" id="donors-count">0</div>
+                    <p>Registered Donors</p>
+                </div>
+                <div class="col-md-3 col-6 stat-item">
+                    <div class="stat-number" id="patients-count">0</div>
+                    <p>Patients Helped</p>
+                </div>
+                <div class="col-md-3 col-6 stat-item">
+                    <div class="stat-number" id="donations-count">0</div>
+                    <p>Total Donations</p>
+                </div>
+                <div class="col-md-3 col-6 stat-item">
+                    <div class="stat-number" id="hospitals-count">0</div>
+                    <p>Partner Hospitals</p>
+                </div>
+            </div>
+        </div>
+    </section>
+    
+    <!-- Quote Section -->
+    <section class="quote-section">
+        <div class="container text-center">
+            <blockquote class="blockquote">
+                <p class="mb-0">"Opportunities knock the door sometimes, so don't let it go and donate blood."</p>
+                <footer class="blockquote-footer mt-3"></footer>
+            </blockquote>
+        </div>
+    </section>
+    
+    <!-- Emergency Modal -->
+    <div class="modal fade" id="emergencyModal" tabindex="-1" aria-hidden="true">
+        <div class="modal-dialog">
+            <div class="modal-content">
+                <div class="modal-header bg-danger text-white">
+                    <h5 class="modal-title"><i class="fas fa-ambulance me-2"></i>Emergency Contact</h5>
+                    <button type="button" class="btn-close btn-close-white" data-bs-dismiss="modal" aria-label="Close"></button>
+                </div>
+                <div class="modal-body">
+                    <p>If you're in urgent need of blood or medical assistance, please contact:</p>
+                    <ul class="list-group mb-3">
+                        <li class="list-group-item d-flex justify-content-between align-items-center">
+                            Emergency Blood Bank
+                            <a href="tel:+1234567890" class="btn btn-sm btn-outline-danger">
+                                <i class="fas fa-phone"></i> Call
+                            </a>
+                        </li>
+                        <li class="list-group-item d-flex justify-content-between align-items-center">
+                            Nearest Hospital
+                            <a href="tel:+1234567890" class="btn btn-sm btn-outline-danger">
+                                <i class="fas fa-phone"></i> Call
+                            </a>
+                        </li>
+                        <li class="list-group-item d-flex justify-content-between align-items-center">
+                            Ambulance Service
+                            <a href="tel:+1234567890" class="btn btn-sm btn-outline-danger">
+                                <i class="fas fa-phone"></i> Call
+                            </a>
+                        </li>
+                    </ul>
+                    <div class="alert alert-warning">
+                        <i class="fas fa-exclamation-triangle me-2"></i>
+                        For life-threatening emergencies, please call your local emergency number immediately.
+                    </div>
+                </div>
+                <div class="modal-footer">
+                    <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Close</button>
+                </div>
+            </div>
+        </div>
+    </div>
+    
+    <!-- First Aid Tips Modal -->
+    <div class="modal fade" id="firstaidModal" tabindex="-1" aria-hidden="true">
+        <div class="modal-dialog modal-lg">
+            <div class="modal-content">
+                <div class="modal-header bg-success text-white">
+                    <h5 class="modal-title"><i class="fas fa-first-aid me-2"></i>First Aid & Life Saving Tips</h5>
+                    <button type="button" class="btn-close btn-close-white" data-bs-dismiss="modal" aria-label="Close"></button>
+                </div>
+                <div class="modal-body firstaid-tips">
+                    <div class="alert alert-info">
+                        <i class="fas fa-info-circle me-2"></i>
+                        These tips are not a substitute for professional medical training. Consider taking a certified first aid course.
+                    </div>
+                    
+                    <h4 class="text-danger mb-4">Basic CPR Steps</h4>
+                    
+                    <div class="firstaid-step">
+                        <h5>1. Check for Responsiveness</h5>
+                        <p>Tap the person's shoulder and shout "Are you okay?" If no response, call for emergency help immediately.</p>
+                    </div>
+                    
+                    <div class="firstaid-step">
+                        <h5>2. Open the Airway</h5>
+                        <p>Place the person on their back. Tilt their head back slightly by lifting the chin to open the airway.</p>
+                        <img src="/static/image/cpr.avif" alt="Opening airway">
+                    </div>
+                    
+                    <div class="firstaid-step">
+                        <h5>3. Check for Breathing</h5>
+                        <p>Look, listen, and feel for no more than 10 seconds. If the person isn't breathing, begin CPR.</p>
+                    </div>
+                    
+                    <div class="firstaid-step">
+                        <h5>4. Chest Compressions</h5>
+                        <p>Place the heel of one hand on the center of the chest. Place your other hand on top and interlock fingers. Press down hard and fast - about 2 inches deep at a rate of 100-120 compressions per minute.</p>
+                        <img src="/static/image/CPR-072204-body.jpg" alt="Chest compressions">
+                    </div>
+                    
+                    <div class="firstaid-step">
+                        <h5>5. Rescue Breaths (if trained)</h5>
+                        <p>After 30 compressions, give 2 rescue breaths. Pinch the nose shut, make a complete seal over the person's mouth, and blow in for about 1 second to make the chest rise.</p>
+                    </div>
+                    
+                    <div class="firstaid-step">
+                        <h5>6. Continue Until Help Arrives</h5>
+                        <p>Continue cycles of 30 compressions and 2 breaths until the person starts breathing or emergency responders take over.</p>
+                    </div>
+                    
+                    <hr>
+                    
+                    <h4 class="text-danger mb-4">Other Important First Aid Tips</h4>
+                    
+                    <div class="firstaid-step">
+                        <h5><i class="fas fa-bandage text-danger me-2"></i>Severe Bleeding</h5>
+                        <p>Apply direct pressure on the wound with a clean cloth until bleeding stops. Don't remove soaked cloths - add more on top.</p>
+                    </div>
+                    
+                    <div class="firstaid-step">
+                        <h5><i class="fas fa-burn text-danger me-2"></i>Burns</h5>
+                        <p>Cool the burn under cool (not cold) running water for 10-15 minutes. Don't apply ice, butter, or ointments.</p>
+                    </div>
+                    
+                    <div class="firstaid-step">
+                        <h5><i class="fas fa-head-side-mask text-danger me-2"></i>Choking</h5>
+                        <p>For adults: Perform abdominal thrusts (Heimlich maneuver). For infants: Use back blows and chest thrusts.</p>
+                    </div>
+                </div>
+                <div class="modal-footer">
+                    <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Close</button>
+                    <a href="https://youtu.be/vorPZdCerDk?si=VFnPwjxH0CfAsITP" target="_blank" class="btn btn-success">
+                        <i class="fas fa-external-link-alt me-2"></i>Find a First Aid Course
+                    </a>
+                </div>
+            </div>
+        </div>
+    </div>
+    
+    <!-- Feedback Modal -->
+    <div class="modal fade" id="feedbackModal" tabindex="-1" aria-hidden="true">
+        <div class="modal-dialog">
+            <div class="modal-content">
+                <div class="modal-header bg-primary text-white">
+                    <h5 class="modal-title"><i class="fas fa-comment-alt me-2"></i>Share Your Feedback</h5>
+                    <button type="button" class="btn-close btn-close-white" data-bs-dismiss="modal" aria-label="Close"></button>
+                </div>
+                <div class="modal-body">
+                    <form id="feedbackForm">
+                        <div class="mb-3">
+                            <label for="feedbackType" class="form-label">Feedback Type</label>
+                            <select class="form-select" id="feedbackType" required>
+                                <option value="" selected disabled>Select type</option>
+                                <option>Compliment</option>
+                                <option>Suggestion</option>
+                                <option>Complaint</option>
+                                <option>Question</option>
+                            </select>
+                        </div>
+                        <div class="mb-3">
+                            <label for="feedbackMessage" class="form-label">Your Feedback</label>
+                            <textarea class="form-control" id="feedbackMessage" rows="4" required></textarea>
+                        </div>
+                        <div class="mb-3">
+                            <label for="contactEmail" class="form-label">Email (optional)</label>
+                            <input type="email" class="form-control" id="contactEmail" placeholder="name@example.com">
+                        </div>
+                        <div class="d-grid">
+                            <button type="submit" class="btn btn-primary">
+                                <i class="fas fa-paper-plane me-2"></i>Submit Feedback
+                            </button>
+                        </div>
+                    </form>
+                </div>
+            </div>
+        </div>
+    </div>
+    
+    {% include "blood/footer.html" %}
+    
+    <!-- Bootstrap JS -->
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
+    
+    <!-- Counter Animation -->
+    <script>
+        // Animate stats counters
+        function animateCounters() {
+            const counters = document.querySelectorAll('.stat-number');
+            const speed = 200;
+            
+            counters.forEach(counter => {
+                const target = getTargetNumber(counter.id);
+                const count = +counter.innerText;
+                const increment = target / speed;
+                
+                if (count < target) {
+                    counter.innerText = Math.ceil(count + increment);
+                    setTimeout(animateCounters, 1);
+                } else {
+                    counter.innerText = target;
+                }
+            });
+        }
+        
+        function getTargetNumber(id) {
+            switch(id) {
+                case 'donors-count': return 1250;
+                case 'patients-count': return 850;
+                case 'donations-count': return 2100;
+                case 'hospitals-count': return 45;
+                default: return 100;
+            }
+        }
+        
+        // Initialize counters when stats section is in view
+        const observer = new IntersectionObserver((entries) => {
+            if (entries[0].isIntersecting) {
+                animateCounters();
+                observer.unobserve(entries[0].target);
+            }
+        }, {threshold: 0.5});
+        
+        observer.observe(document.querySelector('.stats-section'));
+        
+        // Handle feedback form submission
+        document.getElementById('feedbackForm').addEventListener('submit', function(e) {
+            e.preventDefault();
+            alert('Thank you for your feedback! We appreciate your input.');
+            var feedbackModal = bootstrap.Modal.getInstance(document.getElementById('feedbackModal'));
+            feedbackModal.hide();
+            this.reset();
+        });
+        
+        // Make sure emergency button stays on all pages
+        // This would need to be included in your base template or all pages
+        document.addEventListener('DOMContentLoaded', function() {
+            // This ensures the buttons are present on all pages
+            console.log('Emergency and feedback buttons available');
+        });
+    </script>
+</body>
+
+</html>
